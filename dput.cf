@@ -1,0 +1,9 @@
+# This is dput configuration used by make dput
+[DEFAULT]
+default_host_main = citationtech
+
+[citationtech]
+fqdn = packages.internal
+login = packages
+method = scp
+incoming = /home/packages/packages/debian/mini-dinstall/incoming/
