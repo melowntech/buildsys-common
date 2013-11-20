@@ -19,6 +19,9 @@ dput:
 dversion:
 	@echo $(call deb_version)
 
+dch:
+	@dch -i --no-auto-nmu
+
 # notice no quotes around deb_tag -> we get package name and package version as
 # separates args
 dtag:
