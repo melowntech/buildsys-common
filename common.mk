@@ -45,3 +45,7 @@ define deb_version
 $(shell dpkg-parsechangelog | \
 	gawk '/^Version:/ { print $$2; }')
 endef
+
+
+tar:
+	@($(BUILDSYS_COMMON_ROOT)/make-tarball.sh -j`grep -c ^processor /proc/cpuinfo`)
