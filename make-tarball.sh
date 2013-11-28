@@ -40,10 +40,10 @@ function pack() {
 
 if test -z "${SUBPACKAGES}"; then
     # just simple package
-    pack "${NAME}.tar.gz" "${DESTDIR}"
+    pack ../"${NAME}.tar.gz" "${DESTDIR}"
 else
     # just simple package
     for PACKAGE in ${SUBPACKAGES}; do
-        pack "${PACKAGE}.tar.gz" "${DESTDIR}/${PACKAGE}"
+        pack ../"${PACKAGE}.tar.gz" "${DESTDIR}/${PACKAGE}"
     done
 fi
