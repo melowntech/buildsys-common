@@ -13,8 +13,13 @@ SVN_OPT="-q"
 
 cd ..
 
-message "Updating repo"
-svn up ${SVN_OPT}
+if test -n "${USE_SVN_REVISION}"; then
+    message "Updating repo to revision ${USE_SVN_REVISION}"
+    svn up ${SVN_OPT} -r"${USE_SVN_REVISION}"
+else
+    message "Updating repo to HEAD revision"
+    svn up ${SVN_OPT}
+fi
 
 REPO=$(svn info . | sed -n 's/^Repository Root: *\(.*\)/\1/p')
 SRC=$(svn info . | sed -n 's/^URL: *\(.*\)/\1/p')
