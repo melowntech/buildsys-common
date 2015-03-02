@@ -3,31 +3,41 @@ BUILDYS_COMMON_INCLUDED=1
 
 BUILDSYS_COMMON_ROOT := $(dir $(realpath $(lastword $(MAKEFILE_LIST))))
 
+# use given customer's debian directory
+DEB_CUSTOMER ?= internal
+
 # dput configuration
 DPUT_DISTRIBUTION := citationtech
 DPUT_CONFIG := dput.cf
 
-deb:
+deb: deb_prepare
 	@(dpkg-buildpackage -b -j`grep -c ^processor /proc/cpuinfo`)
 
-debclean:
+debclean: deb_prepare
 	@(unset MAKELEVEL; unset MAKEFLAGS;	fakeroot ./debian/rules clean)
 
-dput:
+dput: deb_prepare
 	dput -c $(join $(BUILDSYS_COMMON_ROOT),dput.cf) $(DPUT_DISTRIBUTION) $(call deb_changes_file)
 
-dversion:
+dversion: deb_prepare
 	@echo $(call deb_version)
 
-dch:
+dch: deb_prepare
 	@dch -i --no-auto-nmu
 
 # notice no quotes around deb_tag -> we get package name and package version as
 # separates args
-dtag:
+dtag: deb_prepare
 	@$(BUILDSYS_COMMON_ROOT)/dtag.sh $(call deb_tag)
 
-.PHONY: deb debclean dput dtag
+.PHONY: deb debclean dput dtag deb_prepare
+
+deb_prepare:
+	if ! /usr/bin/test -a debian; then \
+		ln -sfT debian.$(DEB_CUSTOMER) debian; \
+	elif /usr/bin/test -h debian; then \
+		ln -sfT debian.$(DEB_CUSTOMER) debian; \
+	fi
 
 # supporting macros
 define deb_changes_file
