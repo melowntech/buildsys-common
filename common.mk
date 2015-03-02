@@ -33,7 +33,7 @@ dtag: deb_prepare
 .PHONY: deb debclean dput dtag deb_prepare
 
 deb_prepare:
-	if ! /usr/bin/test -a debian; then \
+	@if ! /usr/bin/test -a debian; then \
 		ln -sfT debian.$(DEB_CUSTOMER) debian; \
 	elif /usr/bin/test -h debian; then \
 		ln -sfT debian.$(DEB_CUSTOMER) debian; \
