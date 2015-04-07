@@ -1,3 +1,6 @@
+# run all targets sequentially
+.NOTPARALLEL:
+
 # this variable marks this file has been included
 BUILDYS_COMMON_INCLUDED=1
 
