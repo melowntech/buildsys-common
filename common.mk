@@ -26,7 +26,7 @@ dversion: deb_prepare
 	@echo $(call deb_version)
 
 dch: deb_prepare
-	@dch -i --no-auto-nmu
+	@dch -i --release-heuristic log --no-auto-nmu
 
 # notice no quotes around deb_tag -> we get package name and package version as
 # separates args
