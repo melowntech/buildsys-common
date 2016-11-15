@@ -6,8 +6,9 @@ BUILDYS_COMMON_INCLUDED=1
 
 BUILDSYS_COMMON_ROOT := $(dir $(realpath $(lastword $(MAKEFILE_LIST))))
 
-# use given customer's debian directory
+# use given customer's debian directory and release
 DEB_CUSTOMER ?= internal
+DEB_RELEASE ?= $(call deb_release)
 
 # dput configuration
 DPUT_DISTRIBUTION := citationtech
@@ -36,14 +37,10 @@ debsign: deb_prepare
 dtag: deb_prepare
 	@$(BUILDSYS_COMMON_ROOT)/dtag.sh $(call deb_tag)
 
-.PHONY: deb debclean dput dtag deb_prepare
+.PHONY: deb debclean dput dtag deb_prepare deb_show_config
 
 deb_prepare:
-	@if ! /usr/bin/test -a debian; then \
-		ln -sfT debian.$(DEB_CUSTOMER) debian; \
-	elif /usr/bin/test -h debian; then \
-		ln -sfT debian.$(DEB_CUSTOMER) debian; \
-	fi
+	@$(BUILDSYS_COMMON_ROOT)/deblink.sh $(DEB_CUSTOMER) $(DEB_RELEASE)
 
 # supporting macros
 define deb_changes_file
@@ -62,6 +59,13 @@ $(shell dpkg-parsechangelog | \
 	gawk '/^Version:/ { print $$2; }')
 endef
 
+define deb_release
+	$(shell lsb_release -a 2>/dev/null | gawk '/Codename:/ { print $$2 }')
+endef
+
+deb_show_config:
+	@echo DEB_CUSTOMER = $(DEB_CUSTOMER)
+	@echo DEB_RELEASE = $(DEB_RELEASE)
 
 tar:
 	@($(BUILDSYS_COMMON_ROOT)/make-tarball.sh -j`grep -c ^processor /proc/cpuinfo`)
