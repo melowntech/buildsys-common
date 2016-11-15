@@ -28,6 +28,9 @@ dversion: deb_prepare
 dch: deb_prepare
 	@dch -i --release-heuristic log --no-auto-nmu
 
+debsign: deb_prepare
+	@(debsign $(call deb_changes_file))
+
 # notice no quotes around deb_tag -> we get package name and package version as
 # separates args
 dtag: deb_prepare
