@@ -57,26 +57,26 @@ NB: Multiple `debian.*` directories are supported by creating `debian` symlink p
  
 ## Supported make targets
 
-### deb
+### make deb
 
 Makes a debian package. Runs `dpkg-buildpackage`.
 
-### debclean
+### make debclean
 
 Cleans after debian packaging.
 
-### dput
+### make dput
 
 Pushes latest package to remote package tree. Default configuration is set to suit Melown Technologies needs but one can change path to `dput.cf` and distribution to use via make or environment variables `DPUT_CONFIG` and `DPUT_DISTRIBUTION`. It is recommended to export these variable in user's profile (e.g. `~/.bashrc`).
 
-### dversion
+### make dversion
 
 Shows latest debian package version (head of appripriate `debian*/changelog` file).
 
-### dch
+### make dch
 
 Runs `debchange` to edit appropriate `debian*/changelog` file.
 
-### debsign
+### make debsign
 
 Runs `debsign` to (re)sign package.
