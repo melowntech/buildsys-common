@@ -10,9 +10,9 @@ BUILDSYS_COMMON_ROOT := $(dir $(realpath $(lastword $(MAKEFILE_LIST))))
 DEB_CUSTOMER ?= internal
 DEB_RELEASE ?= $(call deb_release)
 
-# dput configuration
-DPUT_DISTRIBUTION := citationtech
-DPUT_CONFIG := dput.cf
+# default dput configuration
+DPUT_DISTRIBUTION ?= melown
+DPUT_CONFIG ?= $(BUILDSYS_COMMON_ROOT)dput.cf
 
 deb: deb_prepare
 	@(dpkg-buildpackage -b -j`grep -c ^processor /proc/cpuinfo`)
@@ -21,7 +21,7 @@ debclean: deb_prepare
 	@(unset MAKELEVEL; unset MAKEFLAGS;	fakeroot ./debian/rules clean)
 
 dput: deb_prepare
-	dput -c $(join $(BUILDSYS_COMMON_ROOT),dput.cf) $(DPUT_DISTRIBUTION) $(call deb_changes_file)
+	dput -c $(DPUT_CONFIG) $(DPUT_DISTRIBUTION) $(call deb_changes_file)
 
 dversion: deb_prepare
 	@echo $(call deb_version)
