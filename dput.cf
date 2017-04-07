@@ -1,8 +1,8 @@
 # This is dput configuration used by make dput
 [DEFAULT]
-default_host_main = citationtech
+default_host_main = melown
 
-[citationtech]
+[melown]
 fqdn = packages.internal
 login = packages
 method = scp
