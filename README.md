@@ -8,13 +8,13 @@ This project holds common buildystem stuff, mainly debian packaging support. It 
 
 ## Basic layout of project that uses `buildsys-*` machinery
 
-Your project is expected to have following directory structure. Component is anything you want to build. There can be more than one components. It is recommended that one component has name similar to project name, e.g. project `vts-tools` can have component named `tools`.
+Your project is expected to have following directory structure. Component is anything you want to build. There can be one or more components. It is recommended that one component has name similar to project name, e.g. project `vts-tools` can have component named `tools`.
  
 ```
 externals/                                   # all submodules of this project
 externals/buildsys/                          # build system parts (submodules)
 externals/buildsys/common                    # this project as a submodule
-component/                                   # root directory of a component
+component/                                   # root directory of a component named "component"
 component/buildsys -> ../externals/buildsys  # symlink to build system
 component/Makefile -> buildsys/X/X.mk        # main makefile, symlink to module's desired buildsystem
 component/src/                               # all sources belong here
@@ -38,7 +38,7 @@ cd component
 ln -s ../externals/buildsys
 ```
 
-### Use as a main build system (optional)
+### Use `buildsys-common` as a main build system (optional)
 
 If a component uses `buildsys-common` as desired build system symlink provided `common.mk` file into component:
 
