@@ -16,7 +16,7 @@ if /usr/bin/test -h debian; then
 fi
 
 # check all possible variants
-VARIANTS="debian.${DEB_CUSTOMER}.${DEB_RELEASE}  debian.${DEB_CUSTOMER} debian.${DEB_RELEASE}"
+VARIANTS="debian.${DEB_CUSTOMER}.${DEB_RELEASE} debian.${DEB_RELEASE} debian.${DEB_CUSTOMER}"
 
 for variant in ${VARIANTS}; do
     if test -d ${variant}; then
