@@ -20,8 +20,12 @@ dput: deb_prepare
 dversion: deb_prepare
 	@echo $(call deb_version)
 
+# we need to use some magic to mimic old simple behaviour:
+#     * plain version increment: --increment + --no-auto-nmu
+#     * grab info from previous entries: --release-heuristic log
+#     * no addition stuff in version (like ubuntu on ubuntu): use fake vendor
 dch: deb_prepare
-	@dch -i --release-heuristic log --no-auto-nmu
+	@dch --increment --release-heuristic log --no-auto-nmu --vendor Melown
 
 debsign: deb_prepare
 	@(debsign $(call deb_changes_file))
