@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# this little script generates default excludes for given directory
-# called from deb.mk's debsrc target
+# this little script generates default excludes for given directory called from
+# deb.mk's debsrc target
 
 echo -I
 echo -I$1/debian.*
