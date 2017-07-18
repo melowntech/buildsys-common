@@ -15,6 +15,7 @@ endif
 BUILDSYS_COMMON_ROOT := $(dir $(realpath $(lastword $(MAKEFILE_LIST))))
 
 # include user's common configuration if present
+common.mk:
 -include common.mk
 
 # include debian stuff
