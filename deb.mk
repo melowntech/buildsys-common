@@ -1,15 +1,20 @@
 # Debian packaging related stuff
 
+include $(BUILDSYS_COMMON_ROOT)deb-releases.mk
+
 # use given customer's debian directory and release
 DEB_CUSTOMER ?= internal
 DEB_RELEASE ?= $(call deb_release)
+DEB_CHANGES_RELEASE ?= $(DEB_TRANSLATE_RELEASE_$(DEB_RELEASE))
+DEB_CHANGES_RELEASE_OPTION ?= --changes-option=-DDistribution="${DEB_CHANGES_RELEASE}"
 
 # default dput configuration
 DPUT_DISTRIBUTION ?= melown
 DPUT_CONFIG ?= $(BUILDSYS_COMMON_ROOT)dput.cf
 
 deb: deb_prepare
-	@(dpkg-buildpackage -b -j`grep -c ^processor /proc/cpuinfo` $(DEB_OVERRIDE))
+	@(echo "*** Building debian binary package for $(DEB_CHANGES_RELEASE) using configuration for $(DEB_RELEASE).")
+	@(dpkg-buildpackage $(DEB_CHANGES_RELEASE_OPTION) -b -j`grep -c ^processor /proc/cpuinfo` $(DEB_OVERRIDE))
 
 debclean: deb_prepare
 	@(unset MAKELEVEL; unset MAKEFLAGS;	fakeroot ./debian/rules clean)
@@ -53,7 +58,7 @@ $(shell dpkg-parsechangelog | \
 endef
 
 define deb_release
-	$(shell lsb_release -c 2>/dev/null | gawk '/Codename:/ { print $$2 }')
+$(shell lsb_release -c 2>/dev/null | gawk '/Codename:/ { print $$2 }')
 endef
 
 # compose DEB_OVERRIDE from DEB_OVERRIDE_* variables
