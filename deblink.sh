@@ -23,13 +23,14 @@ function expand_template() {
     fi
 
     (
-        # we are using { and } to quote text in M4 macros
-        echo "m4_changequote({,})m4_dnl"
+        # we are using {{{ and }}} to quote text in M4 macros these trigraphs
+        # are probably not expected to be in sane text
+        echo "m4_changequote({{{,}}})m4_dnl"
 
         # define empty VAR_header and VAR_footer variables that source file can
         # override
-        echo "m4_define({VAR_header})m4_dnl"
-        echo "m4_define({VAR_footer})m4_dnl"
+        echo "m4_define({{{VAR_header}}})m4_dnl"
+        echo "m4_define({{{VAR_footer}}})m4_dnl"
 
         # include source file, with variable (i.e. macro) definitions
         echo "m4_include(${src})m4_dnl"
@@ -46,7 +47,7 @@ function expand_template() {
 
 function expand_templates() {
     variant="${1}"
-    for template in debian/templates/*.template; do
+    for template in $(compgen -G "debian/templates/*.template"); do
         expand_template "${variant}" "${template}"
     done
 }
