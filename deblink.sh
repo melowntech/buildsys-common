@@ -5,6 +5,8 @@
 
 DEB_CUSTOMER=$1
 DEB_RELEASE=$2
+DEB_VERSION_SUFFIX=$3
+DEB_CHANGELOG=$4
 
 function link() {
     ln -sfT $1 debian;
@@ -60,7 +62,7 @@ fi
 # handling for provided debian directory
 if test -d debian; then
     expand_templates "${DEB_RELEASE}"
-    exit
+    exit 0
 fi
 
 # check all possible release-based variants

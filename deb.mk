@@ -18,6 +18,7 @@ TAR_BINARY=$(shell (which tar))
 # Default settings
 BUILD_BINARY_PACKAGE ?= YES
 BUILD_SOURCE_PACKAGE ?= NO
+DEBIAN_RELEASE_IN_VERSION ?= NO
 
 ifeq ("","$(wildcard /proc/cpuinfo)")
 	CPU_COUNT = 1
@@ -28,9 +29,20 @@ endif
 DPKG_SOURCE_OPTIONS=$(shell $(BUILDSYS_COMMON_ROOT)/generate-exludes.sh \
 							$(notdir $(BUILDSYS_SRC_ROOT)))
 
+# export some variables that can be used in dpkg-buildpackage
+export DEBIAN_RELEASE_IN_VERSION
+export DEB_RELEASE
+
+ifeq ($(USE_DEBIAN_RELEASE_IN_VERSION),YES)
+export DEBIAN_VERSION_SUFFIX = -0$(DEB_RELEASE)
+endif
+
 debbin: deb_prepare
 	@(echo "*** Building debian binary package for $(DEB_CHANGES_RELEASE) using configuration for $(DEB_RELEASE).")
-	@(dpkg-buildpackage $(DEB_CHANGES_RELEASE_OPTION) -b -j$(CPU_COUNT) $(DEB_OVERRIDE))
+	(dpkg-buildpackage $(DEB_CHANGES_RELEASE_OPTION) -b -j$(CPU_COUNT) $(DEB_OVERRIDE))
+ifeq ($(USE_DEBIAN_RELEASE_IN_VERSION),YES)
+	mv $(call deb_changes_file_pristine) $(call deb_changes_file)
+endif
 
 debsrc: deb_prepare
 	@(echo "*** Building debian source package for $(DEB_CHANGES_RELEASE) using configuration for $(DEB_RELEASE).")
@@ -70,10 +82,16 @@ deb_prepare:
 .PHONY: deb debbin debsrc debclean dput dtag deb_prepare deb_show_config
 
 # supporting macros
-define deb_changes_file
+define deb_changes_file_pristine
 $(shell (dpkg-parsechangelog; \
 	echo -n "Architecture: "; dpkg-architecture -qDEB_BUILD_ARCH) \
 	| gawk '/^Version:/ { version=$$2; } /^Source:/ { source=$$2; } /^Architecture:/ { arch=$$2; } END { printf("../%s_%s_%s.changes\n", source, version, arch); }')
+endef
+
+define deb_changes_file
+$(shell (dpkg-parsechangelog; \
+	echo -n "Architecture: "; dpkg-architecture -qDEB_BUILD_ARCH) \
+	| gawk '/^Version:/ { version=$$2; } /^Source:/ { source=$$2; } /^Architecture:/ { arch=$$2; } END { printf("../%s_%s$(DEBIAN_VERSION_SUFFIX)_%s.changes\n", source, version, arch); }')
 endef
 
 define deb_tag
