@@ -77,7 +77,7 @@ debsign: deb_prepare
 	@(debsign $(call deb_changes_file))
 
 deb_prepare:
-	@$(BUILDSYS_COMMON_ROOT)/deblink.sh $(DEB_CUSTOMER) $(DEB_RELEASE)
+	@$(BUILDSYS_COMMON_ROOT)deb-prepare.sh $(DEB_CUSTOMER) $(DEB_RELEASE)
 
 .PHONY: deb debbin debsrc debclean dput dtag deb_prepare deb_show_config
 
