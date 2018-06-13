@@ -84,7 +84,9 @@ dch: deb_prepare
 	@dch --increment --release-heuristic log --no-auto-nmu --vendor Melown
 
 debsign: deb_prepare
+ifeq ($(USE_DEBIAN_RELEASE_IN_VERSION),YES)
 	$(call deb_move_file,changes)
+endif
 	@(debsign $(call deb_file,changes))
 
 deb_prepare:
