@@ -84,5 +84,4 @@ fi
 # Template expansion; only if there is any template
 if test -d debian/templates; then
     expand_templates "${DEB_RELEASE}"
-    break;
 fi
