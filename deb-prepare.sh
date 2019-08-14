@@ -50,29 +50,39 @@ function expand_template() {
 
 # expands all templates from debian/templates
 function expand_templates() {
-    variant="${1}"
+    release="${1}"
+    echo "*** Expanding debian templates for release ${release}." >/dev/stderr
     for template in $(compgen -G "debian/templates/*.template"); do
-        expand_template "${variant}" "${template}"
+        expand_template "${release}" "${template}"
     done
 }
 
-# symlink? make room
+# Symlink? Make room for possible different destination.
 if /usr/bin/test -h debian; then
     rm debian
 fi
 
-# handling for provided debian directory
-if test -d debian; then
-    expand_templates "${DEB_RELEASE}"
-    exit 0
+# Symlinking
+if ! test -d debian; then
+    # no debian dir, we have to symlink
+
+    # check all possible release-based variants
+    VARIANTS="${DEB_CUSTOMER}.${DEB_RELEASE} ${DEB_RELEASE} ${DEB_CUSTOMER}"
+
+    for variant in ${VARIANTS}; do
+        path="debian.${variant}"
+        if test -d "${path}"; then
+            echo "*** Using debian directory ${path}." >/dev/stderr
+            link "debian.${variant}"
+            break
+        fi
+    done
+else
+    echo "*** Using plain debian directory." >/dev/stderr
 fi
 
-# check all possible release-based variants
-VARIANTS="${DEB_CUSTOMER}.${DEB_RELEASE} ${DEB_RELEASE} ${DEB_CUSTOMER}"
-
-for variant in ${VARIANTS}; do
-    if test -d "debian.${variant}"; then
-        link "debian.${variant}"
-        exit 0
-    fi
-done
+# Template expansion; only if there is any template
+if test -d debian/templates; then
+    expand_templates "${DEB_RELEASE}"
+    break;
+fi
