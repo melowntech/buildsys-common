@@ -1,7 +1,7 @@
 # This file can be included into debian/rules to include basic stuff and update
 # package version to include debian release for which this package is built
 
-include /usr/share/dpkg/pkg-info.mk
+include /usr/share/dpkg/default.mk
 
 ifneq ("$(DEBIAN_VERSION_SUFFIX)","")
 # add DEB_RELEASE variable to debian_revision part of package version to
