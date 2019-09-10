@@ -9,3 +9,7 @@ ifneq ("$(DEBIAN_VERSION_SUFFIX)","")
 override_dh_gencontrol:
 	dh_gencontrol -- -v$(DEB_VERSION)$(DEBIAN_VERSION_SUFFIX)
 endif
+
+# extra cleaning, empty by default
+.PHONY: debclean_extra
+debclean_extra: ;

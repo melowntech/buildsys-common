@@ -68,7 +68,7 @@ deb: debsrc
 endif
 
 debclean: deb_prepare
-	@(unset MAKELEVEL; unset MAKEFLAGS;	fakeroot ./debian/rules clean)
+	@(unset MAKELEVEL; unset MAKEFLAGS;	fakeroot ./debian/rules clean debclean_extra)
 
 dput: deb_prepare
 	dput -c $(DPUT_CONFIG) $(DPUT_DISTRIBUTION) $(call deb_file,changes)
