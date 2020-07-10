@@ -135,14 +135,31 @@ define deb_move_file
 fi
 endef
 
+# make sure we have a space at the end of the override variable
+ifdef DEB_OVERRIDE
+override DEB_OVERRIDE:="$(DEB_OVERRIDE) "
+endif
+
+# override changed-by if asked to steal package
+# however, if DEB_OVERRIDE_CHANGED_BY is set, nothing happens
+ifdef DEB_STEAL
+DEB_OVERRIDE_CHANGED_BY:=${DEBFULLNAME} <${DEBEMAIL}>
+endif
+
 # compose DEB_OVERRIDE from DEB_OVERRIDE_* variables
 ifdef DEB_OVERRIDE_RELEASE
-	DEB_OVERRIDE:="$(DEB_OVERRIDE) --changes-option=-DDistribution=\"$(DEB_OVERRIDE_RELEASE)\""
+override DEB_OVERRIDE:=$(DEB_OVERRIDE)--changes-option=-DDistribution="$(DEB_OVERRIDE_RELEASE)"
 endif
 ifdef DEB_OVERRIDE_CHANGED_BY
-	DEB_OVERRIDE:="$(DEB_OVERRIDE) --changes-option=-DChanged-By=\"$(DEB_OVERRIDE_CHANGED_BY)\""
+override DEB_OVERRIDE:=$(DEB_OVERRIDE)--changes-option=-DChanged-By="$(DEB_OVERRIDE_CHANGED_BY)" -k"${DEBFULLNAME}"
 endif
 
 deb_show_config:
-	@echo DEB_CUSTOMER = $(DEB_CUSTOMER)
-	@echo DEB_RELEASE = $(DEB_RELEASE)
+	$(info DEB_CUSTOMER = $(DEB_CUSTOMER)) @true
+	$(info DEB_RELEASE = $(DEB_RELEASE)) @true
+	$(info BUILD_BINARY_PACKAGE = $(BUILD_BINARY_PACKAGE)) @true
+	$(info BUILD_SOURCE_PACKAGE = $(BUILD_SOURCE_PACKAGE)) @true
+	$(info USE_DEBIAN_RELEASE_IN_VERSION = $(USE_DEBIAN_RELEASE_IN_VERSION)) @true
+	$(info DPUT_DISTRIBUTION = $(DPUT_DISTRIBUTION)) @true
+	$(info DPUT_CONFIG = $(DPUT_CONFIG)) @true
+	$(info DEB_OVERRIDE = $(DEB_OVERRIDE)) @true
