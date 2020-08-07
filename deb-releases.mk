@@ -5,7 +5,7 @@ DEB_TRANSLATE_RELEASE_wheezy = citationtech-wheezy
 DEB_TRANSLATE_RELEASE_jessie = melown-jessie
 DEB_TRANSLATE_RELEASE_stretch = melown-stretch
 DEB_TRANSLATE_RELEASE_buster = melown-buster
-DEB_TRANSLATE_RELEASE_buster = melown-bullseye
+DEB_TRANSLATE_RELEASE_bullseye = melown-bullseye
 
 # Ubuntu
 DEB_TRANSLATE_RELEASE_xenial = melown-xenial
