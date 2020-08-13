@@ -5,7 +5,9 @@ include $(BUILDSYS_COMMON_ROOT)deb-releases.mk
 # use given customer's debian directory and release
 DEB_CUSTOMER ?= internal
 DEB_RELEASE ?= $(call deb_release)
+DEB_RELEASE_VENDOR ?= $(call deb_release_vendor)
 DEB_CHANGES_RELEASE ?= $(DEB_TRANSLATE_RELEASE_$(DEB_RELEASE))
+DEB_RELEASE_HAS_BACKPORTS ?= $(DEB_RELEASE_HAS_BACKPORTS_$(DEB_RELEASE_VENDOR))
 DEB_CHANGES_RELEASE_OPTION ?= --changes-option=-DDistribution="${DEB_CHANGES_RELEASE}"
 
 # default dput configuration
@@ -32,6 +34,8 @@ DPKG_SOURCE_OPTIONS=$(shell $(BUILDSYS_COMMON_ROOT)/generate-exludes.sh \
 # export some variables that can be used in dpkg-buildpackage
 export DEBIAN_RELEASE_IN_VERSION
 export DEB_RELEASE
+export DEB_CHANGES_RELEASE
+export DEB_RELEASE_HAS_BACKPORTS
 
 HAS_BUILDINFO=$(shell which dpkg-genbuildinfo)
 DPKG_BUILDPACKAGE_EXTRA=
@@ -129,6 +133,10 @@ define deb_release
 $(shell lsb_release -c 2>/dev/null | gawk '/Codename:/ { print $$2 }')
 endef
 
+define deb_release_vendor
+$(shell dpkg-vendor --query Vendor 2>/dev/null)
+endef
+
 define deb_move_file
 @if test -f $(call deb_basefile_pristine).$(1); then \
 	mv -f $(call deb_basefile_pristine).$(1) $(call deb_basefile).$(1); \
@@ -157,6 +165,8 @@ endif
 deb_show_config:
 	$(info DEB_CUSTOMER = $(DEB_CUSTOMER)) @true
 	$(info DEB_RELEASE = $(DEB_RELEASE)) @true
+	$(info DEB_CHANGES_RELEASE = $(DEB_CHANGES_RELEASE)) @true
+	$(info DEB_RELEASE_HAS_BACKPORTS = $(DEB_RELEASE_HAS_BACKPORTS)) @true
 	$(info BUILD_BINARY_PACKAGE = $(BUILD_BINARY_PACKAGE)) @true
 	$(info BUILD_SOURCE_PACKAGE = $(BUILD_SOURCE_PACKAGE)) @true
 	$(info USE_DEBIAN_RELEASE_IN_VERSION = $(USE_DEBIAN_RELEASE_IN_VERSION)) @true
