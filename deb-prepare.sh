@@ -45,7 +45,7 @@ function expand_template() {
         echo "m4_include(${template})m4_dnl"
         # add specialized footer template if exists
         test -f "${footer}" && echo "m4_include(${footer})m4_dnl"
-    ) | m4 -P - > "${dst}"
+    ) | m4 ${DEB_TEMPLATE_MACROS} -P -  > "${dst}"
 }
 
 # expands all templates from debian/templates
