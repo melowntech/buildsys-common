@@ -7,3 +7,9 @@ fqdn = packages.dev.mlwn.se
 login = packages
 method = scp
 incoming = /home/packages/packages/debian/mini-dinstall/incoming/
+
+[melown.staging]
+fqdn = packages.dev.mlwn.se
+login = staging
+method = scp
+incoming = /home/staging/packages/debian/mini-dinstall/incoming/
