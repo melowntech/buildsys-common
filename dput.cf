@@ -13,3 +13,9 @@ fqdn = packages.dev.mlwn.se
 login = staging
 method = scp
 incoming = /home/staging/packages/debian/mini-dinstall/incoming/
+
+[melown.hexagon]
+fqdn = packages.dev.mlwn.se
+login = hexagon
+method = scp
+incoming = /home/hexagon/packages/debian/mini-dinstall/incoming/
