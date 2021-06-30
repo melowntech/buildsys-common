@@ -2,8 +2,10 @@
 
 include $(BUILDSYS_COMMON_ROOT)deb-releases.mk
 
+_DEFAULT_CUSTOMER:=internal
+
 # use given customer's debian directory and release
-DEB_CUSTOMER ?= internal
+DEB_CUSTOMER ?= $(_DEFAULT_CUSTOMER)
 DEB_RELEASE ?= $(call deb_release)
 DEB_RELEASE_VENDOR ?= $(call deb_release_vendor)
 DEB_CHANGES_RELEASE ?= $(DEB_TRANSLATE_RELEASE_$(DEB_RELEASE))
@@ -20,7 +22,13 @@ TAR_BINARY=$(shell (which tar))
 # Default settings
 BUILD_BINARY_PACKAGE ?= YES
 BUILD_SOURCE_PACKAGE ?= NO
-DEBIAN_RELEASE_IN_VERSION ?= NO
+USE_DEBIAN_RELEASE_IN_VERSION ?= NO
+USE_CUSTOMER_IN_VERSION ?= NO
+
+# default customer is never added in version
+ifeq ($(DEB_CUSTOMER),$(_DEFAULT_CUSTOMER))
+USE_CUSTOMER_IN_VERSION = NO
+endif
 
 ifeq ("","$(wildcard /proc/cpuinfo)")
 	CPU_COUNT = 1
@@ -32,16 +40,26 @@ DPKG_SOURCE_OPTIONS=$(shell $(BUILDSYS_COMMON_ROOT)/generate-exludes.sh \
 							$(notdir $(BUILDSYS_SRC_ROOT)))
 
 # export some variables that can be used in dpkg-buildpackage
-export DEBIAN_RELEASE_IN_VERSION
+export USE_DEBIAN_RELEASE_IN_VERSION
+export USE_CUSTOMER_IN_VERSION
 export DEB_RELEASE
 export DEB_CHANGES_RELEASE
 export DEB_RELEASE_HAS_BACKPORTS
 
 HAS_BUILDINFO=$(shell which dpkg-genbuildinfo)
 DPKG_BUILDPACKAGE_EXTRA=
+
 ifeq ($(USE_DEBIAN_RELEASE_IN_VERSION),YES)
+
 #export version suffix
+ifeq ($(USE_CUSTOMER_IN_VERSION),NO)
+# use release
 export DEBIAN_VERSION_SUFFIX = -0$(DEB_RELEASE)
+else
+# use release with customer
+export DEBIAN_VERSION_SUFFIX = -0$(DEB_RELEASE).$(DEB_CUSTOMER)
+endif
+
 #do not sign control files, we'll sign it manually
 ifneq ($(HAS_BUILDINFO),)
 DPKG_BUILDPACKAGE_EXTRA=-uc --buildinfo-option=-O$(call deb_file,buildinfo)
