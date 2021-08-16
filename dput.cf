@@ -2,20 +2,30 @@
 [DEFAULT]
 default_host_main = melown
 
+# main package repo
 [melown]
 fqdn = packages.dev.mlwn.se
 login = packages
 method = scp
 incoming = /home/packages/packages/debian/mini-dinstall/incoming/
 
-[melown.staging]
+# development-only packages
+[melown.dev]
 fqdn = packages.dev.mlwn.se
-login = staging
+login = dev
 method = scp
-incoming = /home/staging/packages/debian/mini-dinstall/incoming/
+incoming = /home/dev/packages/debian/mini-dinstall/incoming/
 
+# Hexagon-wide releases
 [melown.hexagon]
 fqdn = packages.dev.mlwn.se
 login = hexagon
 method = scp
 incoming = /home/hexagon/packages/debian/mini-dinstall/incoming/
+
+# OSS packages
+[melown.oss]
+fqdn = packages.dev.mlwn.se
+login = oss
+method = scp
+incoming = /home/oss/packages/debian/mini-dinstall/incoming/
