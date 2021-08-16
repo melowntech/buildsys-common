@@ -1,0 +1,57 @@
+Common buildsystem support: Debian Packaging
+--------------------------------------------
+
+Debian packaging is an extension above normal Debian Packaging using debhleper
+and dpkg-buildpackage.
+
+Debian directory is one of:
+  * debian: default, non-customized packaging
+  * debian.DEB_CUSTOMER: for customer-based packaging
+  * debian.RELEASE: for release-based packaging
+  * debian.DEB_CUSTOMER.RELEASE: for combined customer- and relase-based packaging
+
+If non-default directory is used the "debian" directory must not exist and a
+symlink to appropriate directory (debian.*) is created autoamtically by the
+buildsystem on each run.
+
+NB: do not add the "debian" symlink to git repository, rather put it in the
+".gitingore" file instead.
+
+------------------------------------------------------------------------
+
+Targets:
+
+    * dch: runs debchange with appropritate options
+    * deb: builds latest package
+    * debsign: (re)signs latest built package
+    * debclean: cleans build tree
+    * dversion: shows latest package version
+    * deb_show_config: shows latest package configuration
+
+    * dput: uploads latest package to package repository
+
+
+Known make/env variables:
+
+    * DEB_CUSTOMER:
+        selected customer (defaults to customer "internal")
+    * DEB_RELEASE:
+        debian release (defaults to current system's debian release)
+    * DPUT_DISTRIBUTION:
+        dput "hostname" to upload packages to (defaults to melown)
+        see "make help-dput" for more info
+
+------------------------------------------------------------------------
+
+Templates
+
+Debian packaging extension uses templates. For every m4 (see info/man m4)
+template in "debian/templates/FILE.template" a FILE is generated in the debian
+directory with appropriate template expanded and fed with values from
+debian/DISTRO/FILE.
+
+So far, we have templated only "control" file.
+
+NB: do not add generated files into repository, rather put them in the
+".gitingore" file instead.
+

@@ -191,3 +191,11 @@ deb_show_config:
 	$(info DPUT_DISTRIBUTION = $(DPUT_DISTRIBUTION)) @true
 	$(info DPUT_CONFIG = $(DPUT_CONFIG)) @true
 	$(info DEB_OVERRIDE = $(DEB_OVERRIDE)) @true
+
+help-deb:
+	@(cat $(BUILDSYS_COMMON_ROOT)/help-deb.txt)
+.PHONY: help-deb
+
+help-dput:
+	@(cat $(BUILDSYS_COMMON_ROOT)/dput.cf)
+.PHONY: help-dput

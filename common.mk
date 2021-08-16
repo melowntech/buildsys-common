@@ -18,5 +18,9 @@ export BUILDSYS_COMMON_ROOT := $(dir $(realpath $(lastword $(MAKEFILE_LIST))))
 common.mk:
 -include common.mk
 
+help-common:
+	@(cat $(BUILDSYS_COMMON_ROOT)/help.txt)
+.PHONY: help-common
+
 # include debian stuff
 include $(BUILDSYS_COMMON_ROOT)deb.mk

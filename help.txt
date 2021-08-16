@@ -1,0 +1,22 @@
+Common buildsystem support
+--------------------------
+
+Common builsystem is mainly responsible for setting common Make variables and
+debian packaging.
+
+------------------------------------------------------------------------
+
+To use this buildsystem to your COMPONENT, you have to:
+
+1) Add this repository as a submodule in externals/buildsys/common
+
+2) Add a symlink COMPONENT/buildsys -> ../externals/buildsys
+
+3) Add a synlink COMPONENT/Makefile -> buildsys/common/common.mk
+
+NB: Replace COMPONENT/Makefile with symlink to more advanced buildsystem if you
+use one (e.g. cmake/cmake.mk)
+
+------------------------------------------------------------------------
+See:
+    make help-deb    for debian packaging info
