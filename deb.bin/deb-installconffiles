@@ -1,0 +1,17 @@
+#!/bin/bash
+
+if (( $(< debian/compat) < 12 )); then
+    exit 0
+fi
+
+for package in "$@"; do
+    SRC=debian/${package}.conffiles
+    DST=debian/${package}/DEBIAN/conffiles
+
+    if [ -f "${SRC}" ]; then
+        echo "    installing conffiles for ${package}"
+        mkdir -p $(dirname ${DST})
+        # join
+        cat ${SRC} >> ${DST}
+    fi
+done

@@ -68,7 +68,8 @@ endif
 
 debbin: deb_prepare
 	@(echo "*** Building debian binary package for $(DEB_CHANGES_RELEASE) using configuration for $(DEB_RELEASE).")
-	(dpkg-buildpackage $(DEB_CHANGES_RELEASE_OPTION) -b -j$(CPU_COUNT) $(DEB_OVERRIDE) $(DPKG_BUILDPACKAGE_EXTRA))
+	(export PATH=$(BUILDSYS_COMMON_ROOT)deb.bin:$$PATH; \
+		dpkg-buildpackage $(DEB_CHANGES_RELEASE_OPTION) -b -j$(CPU_COUNT) $(DEB_OVERRIDE) $(DPKG_BUILDPACKAGE_EXTRA))
 ifeq ($(USE_DEBIAN_RELEASE_IN_VERSION),YES)
 	$(call deb_move_file,changes)
 ifneq ($(HAS_BUILDINFO),)
@@ -78,7 +79,7 @@ endif
 
 debsrc: deb_prepare
 	@(echo "*** Building debian source package for $(DEB_CHANGES_RELEASE) using configuration for $(DEB_RELEASE).")
-	@(export PATH=$(BUILDSYS_COMMON_ROOT):$$PATH TAR_BINARY=$(TAR_BINARY); \
+	@(export PATH=$(BUILDSYS_COMMON_ROOT)src.bin:$$PATH TAR_BINARY=$(TAR_BINARY); \
 		dpkg-buildpackage $(DEB_CHANGES_RELEASE_OPTION) -S $(DEB_OVERRIDE) $(DPKG_SOURCE_OPTIONS))
 
 # deb target (conditionally) depends on debbin and debsrc
