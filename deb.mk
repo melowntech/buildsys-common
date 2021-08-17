@@ -104,7 +104,12 @@ dversion: deb_prepare
 #     * grab info from previous entries: --release-heuristic log
 #     * no addition stuff in version (like ubuntu on ubuntu): use fake vendor
 dch: deb_prepare
-	@dch --increment --release-heuristic log --no-auto-nmu --vendor Melown
+	@(if [ -f debian/changelog ]; then \
+		dch --increment --release-heuristic log --no-auto-nmu --vendor Melown; \
+	else \
+		dch --create --package $$(gawk '/^Source:/ {print $$2}' debian/control) \
+			--vendor Melown -v 0.1 -D mlwn; \
+	fi)
 
 debsign: deb_prepare
 ifeq ($(USE_DEBIAN_RELEASE_IN_VERSION),YES)
