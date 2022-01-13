@@ -10,7 +10,8 @@ DEB_RELEASE ?= $(call deb_release)
 DEB_RELEASE_VENDOR ?= $(call deb_release_vendor)
 DEB_CHANGES_RELEASE ?= $(DEB_TRANSLATE_RELEASE_$(DEB_RELEASE))
 DEB_RELEASE_HAS_BACKPORTS ?= $(DEB_RELEASE_HAS_BACKPORTS_$(DEB_RELEASE_VENDOR))
-DEB_CHANGES_RELEASE_OPTION ?= --changes-option=-DDistribution="${DEB_CHANGES_RELEASE}"
+DEB_CHANGES_RELEASE_OPTION ?= --changes-option=-DDistribution="$(DEB_CHANGES_RELEASE)"
+DEB_RELEASE_VERSION ?= $(call deb_release_version)
 
 # default dput configuration
 DPUT_DISTRIBUTION ?= melown
@@ -45,6 +46,7 @@ export USE_CUSTOMER_IN_VERSION
 export DEB_RELEASE
 export DEB_CHANGES_RELEASE
 export DEB_RELEASE_HAS_BACKPORTS
+export DEB_RELEASE_VERSION
 
 HAS_BUILDINFO=$(shell which dpkg-genbuildinfo)
 DPKG_BUILDPACKAGE_EXTRA=
@@ -167,6 +169,11 @@ define deb_move_file
 fi
 endef
 
+define deb_release_version
+$(shell dpkg-parsechangelog | \
+	gawk 'match($$0, /RELEASE:([^[:space:]]+)/, out) { release = out[1]; } END { print release }')
+endef
+
 # make sure we have a space at the end of the override variable
 ifdef DEB_OVERRIDE
 override DEB_OVERRIDE:="$(DEB_OVERRIDE) "
@@ -197,6 +204,7 @@ deb_show_config:
 	$(info DPUT_DISTRIBUTION = $(DPUT_DISTRIBUTION)) @true
 	$(info DPUT_CONFIG = $(DPUT_CONFIG)) @true
 	$(info DEB_OVERRIDE = $(DEB_OVERRIDE)) @true
+	$(info DEB_RELEASE_VERSION = $(DEB_RELEASE_VERSION)) @true
 
 help-deb:
 	@(cat $(BUILDSYS_COMMON_ROOT)/help-deb.txt)
