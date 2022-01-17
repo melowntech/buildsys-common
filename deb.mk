@@ -170,7 +170,7 @@ fi
 endef
 
 define deb_release_version
-$(shell dpkg-parsechangelog | \
+$(shell dpkg-parsechangelog 2>/dev/null | \
 	gawk 'match($$0, /RELEASE:([^[:space:]]+)/, out) { release = out[1]; } END { print release }')
 endef
 
@@ -193,7 +193,7 @@ ifdef DEB_OVERRIDE_CHANGED_BY
 override DEB_OVERRIDE:=$(DEB_OVERRIDE)--changes-option=-DChanged-By="$(DEB_OVERRIDE_CHANGED_BY)" -k"${DEBFULLNAME}"
 endif
 
-deb_show_config:
+deb_show_config: deb_prepare
 	$(info DEB_CUSTOMER = $(DEB_CUSTOMER)) @true
 	$(info DEB_RELEASE = $(DEB_RELEASE)) @true
 	$(info DEB_CHANGES_RELEASE = $(DEB_CHANGES_RELEASE)) @true
