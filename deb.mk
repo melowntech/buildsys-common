@@ -174,11 +174,6 @@ $(shell dpkg-parsechangelog 2>/dev/null | \
 	gawk 'match($$0, /RELEASE:([^[:space:]]+)/, out) { release = out[1]; } END { print release }')
 endef
 
-# make sure we have a space at the end of the override variable
-ifdef DEB_OVERRIDE
-override DEB_OVERRIDE:="$(DEB_OVERRIDE) "
-endif
-
 # override changed-by if asked to steal package
 # however, if DEB_OVERRIDE_CHANGED_BY is set, nothing happens
 ifdef DEB_STEAL
