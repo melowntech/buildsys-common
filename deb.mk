@@ -96,7 +96,7 @@ debclean: deb_prepare
 	@(unset MAKELEVEL; unset MAKEFLAGS;	fakeroot ./debian/rules clean debclean_extra)
 
 dput: deb_prepare
-	dput -u -c $(DPUT_CONFIG) $(DPUT_DISTRIBUTION) $(call deb_file,changes)
+	dput -c $(DPUT_CONFIG) $(DPUT_DISTRIBUTION) $(call deb_file,changes)
 
 dversion: deb_prepare
 	@echo $(call deb_version)

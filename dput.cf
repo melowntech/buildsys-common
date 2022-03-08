@@ -15,6 +15,7 @@ fqdn = packages.dev.mlwn.se
 login = dev
 method = scp
 incoming = /home/dev/packages/debian/mini-dinstall/incoming/
+allow_unsigned_uploads = false
 
 # Hexagon-wide releases
 [melown.hexagon]
