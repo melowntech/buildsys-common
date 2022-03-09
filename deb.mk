@@ -12,6 +12,7 @@ DEB_CHANGES_RELEASE ?= $(DEB_TRANSLATE_RELEASE_$(DEB_RELEASE))
 DEB_RELEASE_HAS_BACKPORTS ?= $(DEB_RELEASE_HAS_BACKPORTS_$(DEB_RELEASE_VENDOR))
 DEB_CHANGES_RELEASE_OPTION ?= --changes-option=-DDistribution="$(DEB_CHANGES_RELEASE)"
 DEB_RELEASE_VERSION ?= $(call deb_release_version)
+DEB_EXTRA_VERSION ?=
 
 # default dput configuration
 DPUT_DISTRIBUTION ?= melown
@@ -56,10 +57,17 @@ ifeq ($(USE_DEBIAN_RELEASE_IN_VERSION),YES)
 #export version suffix
 ifeq ($(USE_CUSTOMER_IN_VERSION),NO)
 # use release
+ifeq ($(strip $(DEB_EXTRA_VERSION)),)
 export DEBIAN_VERSION_SUFFIX = -0$(DEB_RELEASE)
 else
+export DEBIAN_VERSION_SUFFIX = -0$(DEB_RELEASE).$(strip $(DEB_EXTRA_VERSION))
+endif
+else ifeq ($(strip $(DEB_EXTRA_VERSION)),)
 # use release with customer
 export DEBIAN_VERSION_SUFFIX = -0$(DEB_RELEASE).$(DEB_CUSTOMER)
+else
+# use extra version
+export DEBIAN_VERSION_SUFFIX = -0$(DEB_RELEASE).$(DEB_CUSTOMER).$(strip $(DEB_EXTRA_VERSION))
 endif
 
 #do not sign control files, we'll sign it manually
@@ -200,6 +208,7 @@ deb_show_config: deb_prepare
 	$(info DPUT_CONFIG = $(DPUT_CONFIG)) @true
 	$(info DEB_OVERRIDE = $(DEB_OVERRIDE)) @true
 	$(info DEB_RELEASE_VERSION = $(DEB_RELEASE_VERSION)) @true
+	$(info DEBIAN_VERSION_SUFFIX = $(DEBIAN_VERSION_SUFFIX)) @true
 
 help-deb:
 	@(cat $(BUILDSYS_COMMON_ROOT)/help-deb.txt)
