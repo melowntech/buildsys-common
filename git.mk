@@ -8,4 +8,4 @@ endef
 
 # include git-based config
 common.mk.d/git-branch/$(git-branch)/common.mk:
-include common.mk.d/git-branch/$(git-branch)/common.mk
+-include common.mk.d/git-branch/$(git-branch)/common.mk
