@@ -16,18 +16,31 @@ function link() {
 
 # expands template from debian/templates
 function expand_template() {
-    variant="${1}"
-    template="${2}"
+    template="${1}"
     base=$(basename "${template}" .template)
-    src="debian/${variant}/${base}"
     dst="debian/${base}"
-    header="${src}.header"
-    footer="${src}.footer"
 
-    if ! test -f "${src}"; then
-        echo "There is no source file ${src} to fill in data in template ${template}." >/dev/stderr
+    shift
+    declare -a srcs
+    for variant in "${@}"; do
+        srcs+=("debian/${variant}/${base}")
+    done
+
+    src=""
+    for candidate in ${srcs[@]}; do
+        if test -f "${candidate}"; then
+            src="${candidate}"
+            break
+        fi
+    done
+
+    if test -z "${src}"; then
+        echo "There is no source file ${srcs[@]} to fill in data in template ${template}." >/dev/stderr
         exit 1
     fi
+
+    header="${src}.header"
+    footer="${src}.footer"
 
     (
         # we are using {{{ and }}} to quote text in M4 macros these trigraphs
@@ -36,6 +49,10 @@ function expand_template() {
 
         # include source file, with variable (i.e. macro) definitions
         echo "m4_include(${src})m4_dnl"
+
+        echo "m4_define({{{DEB_RELEASE}}},{{{${DEB_RELEASE}}}})m4_dnl"
+        echo "m4_define({{{DEB_CUSTOMER}}},{{{${DEB_CUSTOMER}}}})m4_dnl"
+        echo "m4_define({{{DEBIAN_VERSION_SUFFIX}}},{{{${DEBIAN_VERSION_SUFFIX}}}})m4_dnl"
 
         # output:
 
@@ -50,10 +67,9 @@ function expand_template() {
 
 # expands all templates from debian/templates
 function expand_templates() {
-    release="${1}"
-    echo "*** Expanding debian templates for release ${release}." >/dev/stderr
+    echo "*** Expanding debian templates for releases <${@}>." >/dev/stderr
     for template in $(compgen -G "debian/templates/*.template"); do
-        expand_template "${release}" "${template}"
+        expand_template "${template}" "${@}"
     done
 }
 
@@ -83,5 +99,5 @@ fi
 
 # Template expansion; only if there is any template
 if test -d debian/templates; then
-    expand_templates "${DEB_RELEASE}"
+    expand_templates "${DEB_RELEASE}" any
 fi
