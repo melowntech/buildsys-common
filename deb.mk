@@ -209,6 +209,7 @@ deb_show_config: deb_prepare
 	$(info DEB_OVERRIDE = $(DEB_OVERRIDE)) @true
 	$(info DEB_RELEASE_VERSION = $(DEB_RELEASE_VERSION)) @true
 	$(info DEBIAN_VERSION_SUFFIX = $(DEBIAN_VERSION_SUFFIX)) @true
+	$(info GIT_BRANCH_CONFIG = $(GIT_BRANCH_CONFIG)) @true
 
 help-deb:
 	@(cat $(BUILDSYS_COMMON_ROOT)/help-deb.txt)
