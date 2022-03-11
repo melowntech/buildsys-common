@@ -20,3 +20,11 @@ $(GIT_BRANCH_CONFIG_DIR):
 edit-git-branch-config: $(GIT_BRANCH_CONFIG_DIR)
 	sensible-editor $(GIT_BRANCH_CONFIG)
 .PHONY: edit-git-branch-config
+
+show-git-branch-config:
+	@test -f $(GIT_BRANCH_CONFIG) && cat $(GIT_BRANCH_CONFIG) || exit 0
+.PHONY: show-git-branch-config
+
+remove-git-branch-config:
+	@$(BUILDSYS_COMMON_ROOT)/git/remove-branch-config.sh $(GIT_BRANCH_CONFIG)
+.PHONY: remove-git-branch-config
