@@ -13,6 +13,7 @@ DEB_RELEASE_HAS_BACKPORTS ?= $(DEB_RELEASE_HAS_BACKPORTS_$(DEB_RELEASE_VENDOR))
 DEB_CHANGES_RELEASE_OPTION ?= --changes-option=-DDistribution="$(DEB_CHANGES_RELEASE)"
 DEB_RELEASE_VERSION ?= $(call deb_release_version)
 DEB_EXTRA_VERSION ?=
+DEB_NO_SIGN ?= NO
 
 # default dput configuration
 DPUT_DISTRIBUTION ?= melown
@@ -83,7 +84,9 @@ debbin: deb_prepare
 ifeq ($(USE_DEBIAN_RELEASE_IN_VERSION),YES)
 	$(call deb_move_file,changes)
 ifneq ($(HAS_BUILDINFO),)
+ifneq ($(DEB_NO_SIGN),YES)
 	@(debsign $(call deb_file,changes))
+endif
 endif
 endif
 
