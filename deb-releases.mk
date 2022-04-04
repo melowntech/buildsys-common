@@ -12,6 +12,7 @@ DEB_TRANSLATE_RELEASE_bullseye = melown-bullseye
 DEB_TRANSLATE_RELEASE_xenial = melown-xenial
 DEB_TRANSLATE_RELEASE_bionic = melown-bionic
 DEB_TRANSLATE_RELEASE_focal = melown-focal
+DEB_TRANSLATE_RELEASE_jammy = melown-jammy
 
 
 # Distro info
