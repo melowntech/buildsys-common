@@ -77,7 +77,7 @@ DPKG_BUILDPACKAGE_EXTRA=-uc --buildinfo-option=-O$(call deb_file,buildinfo)
 endif
 endif
 
-debbin: deb_prepare
+debbin: deb_prepare deb_prepare_sources
 	@(echo "*** Building debian binary package for $(DEB_CHANGES_RELEASE) using configuration for $(DEB_RELEASE).")
 	(export PATH=$(BUILDSYS_COMMON_ROOT)deb.bin:$$PATH; \
 		dpkg-buildpackage $(DEB_CHANGES_RELEASE_OPTION) -b -j$(CPU_COUNT) $(DEB_OVERRIDE) $(DPKG_BUILDPACKAGE_EXTRA))
@@ -90,7 +90,7 @@ endif
 endif
 endif
 
-debsrc: deb_prepare
+debsrc: deb_prepare deb_prepare_sources
 	@(echo "*** Building debian source package for $(DEB_CHANGES_RELEASE) using configuration for $(DEB_RELEASE).")
 	@(export PATH=$(BUILDSYS_COMMON_ROOT)src.bin:$$PATH TAR_BINARY=$(TAR_BINARY); \
 		dpkg-buildpackage $(DEB_CHANGES_RELEASE_OPTION) -S $(DEB_OVERRIDE) $(DPKG_SOURCE_OPTIONS))
@@ -133,7 +133,10 @@ endif
 deb_prepare:
 	@$(BUILDSYS_COMMON_ROOT)deb-prepare.sh $(DEB_CUSTOMER) $(DEB_RELEASE)
 
-.PHONY: deb debbin debsrc debclean dput dtag deb_prepare deb_show_config
+deb_prepare_sources:
+
+.PHONY: deb debbin debsrc debclean dput dtag deb_prepare deb_show_config \
+        deb_prepare_sources
 
 # supporting macros
 define deb_basefile_pristine
