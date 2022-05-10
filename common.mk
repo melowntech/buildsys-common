@@ -27,3 +27,6 @@ help-common:
 
 # include debian stuff
 include $(BUILDSYS_COMMON_ROOT)deb.mk
+
+# extra stuff
+$(foreach INCLUDE, $(BUILDSYS_COMMON_INCLUDE_EXTRA), $(eval include $(INCLUDE)))
