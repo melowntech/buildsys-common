@@ -7,7 +7,7 @@ _DEFAULT_CUSTOMER:=internal
 # use given customer's debian directory and release
 DEB_CUSTOMER ?= $(_DEFAULT_CUSTOMER)
 DEB_RELEASE ?= $(call deb_release)
-DEB_RELEASE_ENDOR ?= $(call deb_release_vendor)
+DEB_RELEASE_VENDOR ?= $(call deb_release_vendor)
 DEB_CHANGES_RELEASE ?= $(DEB_TRANSLATE_RELEASE_$(DEB_RELEASE))
 DEB_RELEASE_HAS_BACKPORTS ?= $(DEB_RELEASE_HAS_BACKPORTS_$(DEB_RELEASE_VENDOR))
 DEB_CHANGES_RELEASE_OPTION ?= --changes-option=-DDistribution="$(DEB_CHANGES_RELEASE)"
@@ -70,6 +70,7 @@ else
 # use extra version
 export DEBIAN_VERSION_SUFFIX = -0$(DEB_RELEASE).$(DEB_CUSTOMER).$(strip $(DEB_EXTRA_VERSION))
 endif
+
 
 # force version suffix to changes
 ifneq ("$(DEBIAN_VERSION_SUFFIX)","")
