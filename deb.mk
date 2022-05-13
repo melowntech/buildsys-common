@@ -7,7 +7,7 @@ _DEFAULT_CUSTOMER:=internal
 # use given customer's debian directory and release
 DEB_CUSTOMER ?= $(_DEFAULT_CUSTOMER)
 DEB_RELEASE ?= $(call deb_release)
-DEB_RELEASE_VENDOR ?= $(call deb_release_vendor)
+DEB_RELEASE_ENDOR ?= $(call deb_release_vendor)
 DEB_CHANGES_RELEASE ?= $(DEB_TRANSLATE_RELEASE_$(DEB_RELEASE))
 DEB_RELEASE_HAS_BACKPORTS ?= $(DEB_RELEASE_HAS_BACKPORTS_$(DEB_RELEASE_VENDOR))
 DEB_CHANGES_RELEASE_OPTION ?= --changes-option=-DDistribution="$(DEB_CHANGES_RELEASE)"
@@ -71,6 +71,12 @@ else
 export DEBIAN_VERSION_SUFFIX = -0$(DEB_RELEASE).$(DEB_CUSTOMER).$(strip $(DEB_EXTRA_VERSION))
 endif
 
+# force version suffix to changes
+ifneq ("$(DEBIAN_VERSION_SUFFIX)","")
+DEB_CHANGES_VERSION_OPTION=--changes-option=-DVersion="$(call deb_version)$(DEBIAN_VERSION_SUFFIX)"
+endif
+
+
 #do not sign control files, we'll sign it manually
 ifneq ($(HAS_BUILDINFO),)
 DPKG_BUILDPACKAGE_EXTRA=-uc --buildinfo-option=-O$(call deb_file,buildinfo)
@@ -80,7 +86,10 @@ endif
 debbin: deb_prepare deb_prepare_sources
 	@(echo "*** Building debian binary package for $(DEB_CHANGES_RELEASE) using configuration for $(DEB_RELEASE).")
 	(export PATH=$(BUILDSYS_COMMON_ROOT)deb.bin:$$PATH; \
-		dpkg-buildpackage $(DEB_CHANGES_RELEASE_OPTION) -b -j$(CPU_COUNT) $(DEB_OVERRIDE) $(DPKG_BUILDPACKAGE_EXTRA))
+		dpkg-buildpackage $(DEB_CHANGES_RELEASE_OPTION) \
+                          $(DEB_CHANGES_VERSION_OPTION) \
+                          -b -j$(CPU_COUNT) $(DEB_OVERRIDE) \
+                          $(DPKG_BUILDPACKAGE_EXTRA))
 ifeq ($(USE_DEBIAN_RELEASE_IN_VERSION),YES)
 	$(call deb_move_file,changes)
 ifneq ($(HAS_BUILDINFO),)
