@@ -33,10 +33,10 @@ ifeq ($(DEB_CUSTOMER),$(_DEFAULT_CUSTOMER))
 USE_CUSTOMER_IN_VERSION = NO
 endif
 
-ifeq ("","$(wildcard /proc/cpuinfo)")
-	CPU_COUNT = 1
+ifeq ("","$(wildcard /usr/bin/nproc)")
+        CPU_COUNT = 1
 else
-	CPU_COUNT = $(shell grep -c ^processor /proc/cpuinfo)
+        CPU_COUNT = $(shell nproc)
 endif
 
 DPKG_SOURCE_OPTIONS=$(shell $(BUILDSYS_COMMON_ROOT)/generate-exludes.sh \
