@@ -31,6 +31,9 @@ USE_CUSTOMER_IN_VERSION ?= NO
 # default customer is never added in version
 ifeq ($(DEB_CUSTOMER),$(_DEFAULT_CUSTOMER))
 USE_CUSTOMER_IN_VERSION = NO
+DEB_CUSTOM_BUILD = NO
+else
+DEB_CUSTOM_BUILD = YES
 endif
 
 ifeq ("","$(wildcard /usr/bin/nproc)")
@@ -50,6 +53,7 @@ export DEB_CHANGES_RELEASE
 export DEB_RELEASE_HAS_BACKPORTS
 export DEB_RELEASE_VERSION
 export DEB_CUSTOMER
+export DEB_CUSTOM_BUILD
 
 HAS_BUILDINFO=$(shell which dpkg-genbuildinfo)
 DPKG_BUILDPACKAGE_EXTRA=
@@ -215,6 +219,7 @@ endif
 
 deb_show_config: deb_prepare
 	$(info DEB_CUSTOMER = $(DEB_CUSTOMER)) @true
+	$(info DEB_CUSTOM_BUILD = $(DEB_CUSTOM_BUILD)) @true
 	$(info DEB_RELEASE = $(DEB_RELEASE)) @true
 	$(info DEB_CHANGES_RELEASE = $(DEB_CHANGES_RELEASE)) @true
 	$(info DEB_RELEASE_HAS_BACKPORTS = $(DEB_RELEASE_HAS_BACKPORTS)) @true
