@@ -89,6 +89,10 @@ DPKG_BUILDPACKAGE_EXTRA=-uc --buildinfo-option=-O$(call deb_file,buildinfo)
 endif
 endif
 
+ifeq ($(DEBIAN_NOCLEAN),YES)
+DPKG_BUILDPACKAGE_EXTRA+= -nc
+endif
+
 debbin: deb_prepare deb_prepare_sources
 	@(echo "*** Building debian binary package for $(DEB_CHANGES_RELEASE) using configuration for $(DEB_RELEASE).")
 	(export PATH=$(BUILDSYS_COMMON_ROOT)deb.bin:$$PATH; \
