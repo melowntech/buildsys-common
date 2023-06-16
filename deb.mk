@@ -128,6 +128,11 @@ debclean: deb_prepare
 dput: deb_prepare
 	dput -c $(DPUT_CONFIG) $(DPUT_DISTRIBUTION) $(call deb_file,changes)
 
+dtag: deb_prepare
+	$(BUILDSYS_COMMON_ROOT)/dtag.sh
+dcommit: deb_prepare
+	$(BUILDSYS_COMMON_ROOT)/dcommit.sh
+
 dversion: deb_prepare
 	@echo $(call deb_version)
 
